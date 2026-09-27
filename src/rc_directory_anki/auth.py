@@ -25,7 +25,9 @@ bp = Blueprint("auth", __name__)
 
 @bp.route("/login")
 def login():
+    print(request.headers)
     redirect_uri = url_for("auth.authorize", _external=True)
+    print(redirect_uri)
     return recurse.authorize_redirect(redirect_uri)
 
 
