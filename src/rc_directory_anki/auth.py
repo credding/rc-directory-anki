@@ -33,6 +33,7 @@ def login():
 def authorize():
     session["token"] = recurse.authorize_access_token()
     next_url = session.get("next_url") or url_for("index")
+    del session["next_url"]
     return redirect(next_url)
 
 
@@ -40,7 +41,7 @@ def require_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "token" not in session:
-            session["next_url"] = request.url
+            session["next_url"] = request.full_path
             return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
 
