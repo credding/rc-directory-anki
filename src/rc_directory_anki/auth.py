@@ -1,7 +1,7 @@
 from functools import wraps
 
 from authlib.integrations.flask_client import OAuth
-from flask import Blueprint, redirect, request, session, url_for
+from flask import Blueprint, redirect, request, session, url_for, current_app
 
 
 def update_token(name, token):
@@ -25,9 +25,9 @@ bp = Blueprint("auth", __name__)
 
 @bp.route("/login")
 def login():
-    print(request.headers)
+    current_app.logger.info(request.headers)
     redirect_uri = url_for("auth.authorize", _external=True)
-    print(redirect_uri)
+    current_app.logger.info(redirect_uri)
     return recurse.authorize_redirect(redirect_uri)
 
 

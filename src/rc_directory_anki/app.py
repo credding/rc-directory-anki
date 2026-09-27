@@ -1,3 +1,5 @@
+import logging
+
 from cachelib import SimpleCache
 from flask import Flask, render_template, session
 from flask_session.cachelib import CacheLibSessionInterface
@@ -13,11 +15,14 @@ app.config.from_prefixed_env()
 
 oauth.init_app(app)
 app.session_interface = CacheLibSessionInterface(client=SimpleCache())  # ty: ignore[invalid-argument-type]
-# app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)  # ty: ignore[invalid-assignment]
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)  # ty: ignore[invalid-assignment]
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(api_bp, url_prefix="/api")
 
+gunicorn_logger = logging.getLogger('gunicorn.error')
+app.logger.handlers = gunicorn_logger.handlers
+app.logger.setLevel(gunicorn_logger.level)
 
 @app.route("/")
 @require_token
