@@ -15,7 +15,7 @@ app.config.from_prefixed_env()
 
 oauth.init_app(app)
 # app.session_interface = CacheLibSessionInterface(client=SimpleCache())  # ty: ignore[invalid-argument-type]
-# app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)  # ty: ignore[invalid-assignment]
+app.wsgi_app = ProxyFix(app.wsgi_app)  # ty: ignore[invalid-assignment]
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(api_bp, url_prefix="/api")
