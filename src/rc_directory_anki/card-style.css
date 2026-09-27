@@ -1,0 +1,57 @@
+.card {
+  text-align: center;
+}
+
+.profile-image {
+  background-color: #3c89c3;
+  clip-path: circle(66px at center);
+}
+
+.profile-image > img {
+  width: 140px;
+  height: 140px;
+  vertical-align: middle;
+  clip-path: circle(64px at center);
+}
+
+.name {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.pronouns {
+  margin-bottom: 2rem;
+}
+
+.location {
+  color: #3c89c3;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.stints {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.stint {
+  border-radius: 3px;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+.stint.retreat {
+  background-color: #3dc06c;
+  color: #fff;
+}
+
+.stint.retreat.half-batch {
+  background: linear-gradient(to right, #3dc06c 50%, #23a050 50%);
+}
+
+.stint.employment {
+  background-color: #d95a88;
+  color: #fff;
+}

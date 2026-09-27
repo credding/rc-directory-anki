@@ -1,0 +1,16 @@
+{% if profile.current_location %}
+    <div class="location">📍 {{ profile.current_location.name }}</div>
+{% endif %}
+<div class="stints">
+{% for stint in profile.stints %}
+    {% if stint.type == "retreat" %}
+        <span class="stint retreat {{ 'half-batch' if stint.for_half_batch else '' }}">
+            {{ stint.batch.alt_name }}
+        </span>
+    {% elif stint.type == "employment" %}
+        <span class="stint employment">
+            {{ stint.title }}
+        </span>
+    {% endif %}
+{% endfor %}
+</div>

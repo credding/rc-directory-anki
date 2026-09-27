@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RC Directory Anki Deck Generator</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Noto+Color+Emoji&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            font-family: "Fira Code", "Noto Color Emoji", monospace;
+            accent-color: #000;
+        }
+
+        body {
+            margin: 0 auto;
+            padding: 0 1rem;
+            max-width: 800px;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        a {
+            color: #3c89c3;
+        }
+
+        select, button {
+            font-family: inherit;
+        }
+
+        #pack-form {
+            padding: 1rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        #pack-form fieldset {
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .pack-type-selection:has(#pack-type-batch:not(:checked)) + .batch-selection {
+            display: none;
+        }
+
+        .submit-button-wrapper {
+            width: 100%;
+            text-align: center;
+        }
+
+        .submit-button {
+            font-size: 2rem;
+            min-width: 10rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="header">RC Directory Anki Pack Generator</h1>
+</header>
+<main>
+    <p>Build an Anki study deck from the Recurse Center directory to get familiar with your batchmates. 🐙</p>
+    <p>Anki is a flashcard program that uses spaced repetition to improve long-term retention. Read more about Anki and
+        download it <a target="_blank" rel="noreferrer" href="https://apps.ankiweb.net/">here</a>.</p>
+    <form id="pack-form" action="{{ url_for('api.generate_pack') }}" method="post">
+        <fieldset class="pack-type-selection">
+            <legend>Select a pack</legend>
+            <div>
+                <input type="radio" id="pack-type-current" name="scope" value="current" checked/>
+                <label for="pack-type-current">At RC now</label>
+            </div>
+            <div>
+                <input type="radio" id="pack-type-overlap" name="scope" value="overlap"/>
+                <label for="pack-type-overlap">At RC with me</label>
+            </div>
+            <div>
+                <input type="radio" id="pack-type-batch" name="scope" value="batch"/>
+                <label for="pack-type-batch">Batch booster pack</label>
+            </div>
+        </fieldset>
+        <fieldset class="batch-selection">
+            <legend>Pick a batch</legend>
+            <label for="select-batch">Batch:</label>
+            <select id="select-batch" name="batch_id">
+                {% for batch in batches %}
+                    <option value="{{ batch.id }}">{{ batch.name }}</option>
+                {% endfor %}
+            </select>
+        </fieldset>
+        <div class="submit-button-wrapper">
+            <button class="submit-button" type="submit">Go!</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>
