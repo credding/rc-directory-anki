@@ -1,8 +1,7 @@
 import logging
+import os
 
-from cachelib import SimpleCache
 from flask import Flask, render_template, session
-from flask_session.cachelib import CacheLibSessionInterface
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from rc_directory_anki.api import bp as api_bp
@@ -14,15 +13,18 @@ app = Flask(__name__)
 app.config.from_prefixed_env()
 
 oauth.init_app(app)
-# app.session_interface = CacheLibSessionInterface(client=SimpleCache())  # ty: ignore[invalid-argument-type]
 app.wsgi_app = ProxyFix(app.wsgi_app)  # ty: ignore[invalid-assignment]
+
+if "gunicorn" in os.environ.get("SERVER_SOFTWARE", "").lower():
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(api_bp, url_prefix="/api")
 
-gunicorn_logger = logging.getLogger('gunicorn.error')
-app.logger.handlers = gunicorn_logger.handlers
-app.logger.setLevel(gunicorn_logger.level)
 
 @app.route("/")
 @require_token
