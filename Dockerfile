@@ -12,4 +12,4 @@ WORKDIR /app
 RUN uv sync --locked
 
 # Presuming there is a `my_app` command provided by the project
-CMD ["uv", "run", "gunicorn", "--bind", "0.0.0.0:8000", "rc_directory_anki:app"]
+CMD ["uv", "run", "gunicorn", "rc_directory_anki:app"]
