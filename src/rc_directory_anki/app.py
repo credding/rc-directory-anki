@@ -31,4 +31,4 @@ app.register_blueprint(api_bp, url_prefix="/api")
 def index():
     token = session["token"]
     batches = get_batches(token)
-    return render_template("index.jinja", batches=batches)
+    return render_template("index.html", batches=batches)

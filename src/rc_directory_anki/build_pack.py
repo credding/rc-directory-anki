@@ -11,8 +11,8 @@ from jinja2 import Environment, PackageLoader
 
 NOPHOTO_URL = "https://d29xw0ra2h4o4u.cloudfront.net/assets/people/no_photo_150-445e994d9f825a8fb6fbf92e0eab7a8566139b2a201ee1aa41570a772c5e78dd.jpg"
 
-jinja_env = Environment(loader=PackageLoader("rc_directory_anki", "."))
-card_info_template = jinja_env.get_template("card-info.jinja")
+jinja_env = Environment(loader=PackageLoader("rc_directory_anki"), autoescape=True)
+card_info_template = jinja_env.get_template("card-info.html")
 
 resources_env = importlib.resources.files("rc_directory_anki")
 card_style = resources_env.joinpath("card-style.css").read_text()
@@ -102,9 +102,9 @@ def build_pack(tmpdir: str, package_name: str, profiles: list) -> str:
                 fields=[
                     str(profile["id"]),  # ID
                     f'<img src="{os.path.basename(image_path)}">',  # Image
-                    profile["first_name"],  # Name
-                    profile["last_name"],  # Name
-                    profile["pronouns"],  # Pronouns
+                    profile["first_name"] or "",  # Name
+                    profile["last_name"] or "",  # Name
+                    profile["pronouns"] or "",  # Pronouns
                     card_info_template.render(profile=profile),  # Info
                     "1" if image_url != NOPHOTO_URL else "",  # HasImage
                 ],
