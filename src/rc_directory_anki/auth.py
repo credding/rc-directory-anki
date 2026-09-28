@@ -1,10 +1,11 @@
 from functools import wraps
 
+from authlib.integrations.base_client import OAuthError
 from authlib.integrations.flask_client import OAuth
 from flask import Blueprint, redirect, request, session, url_for
 
 
-def update_token(name, token):
+def update_token(name, token, refresh_token=None, access_token=None):
     session["token"] = token
 
 
@@ -21,6 +22,12 @@ recurse = oauth.register(
 )
 
 bp = Blueprint("auth", __name__)
+
+
+@bp.app_errorhandler(OAuthError)
+def handle_invalid_token(e):
+    session["next_url"] = request.full_path
+    return redirect(url_for("auth.login"))
 
 
 @bp.route("/login")

@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>RC Directory Anki Deck Generator</title>
+    <title>RC Directory Anki Pack Generator</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Noto+Color+Emoji&display=swap"
-          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Noto+Color+Emoji&display=swap">
     <style>
         :root {
             font-family: "Fira Code", "Noto Color Emoji", monospace;
@@ -31,21 +31,43 @@
 
         select, button {
             font-family: inherit;
+            font-size: inherit;
+            background-color: #f0f0f0;
+            border: 1px solid #000;
+            border-radius: 0;
+            cursor: pointer;
         }
 
-        #pack-form {
+        label:has(input[type="radio"]) {
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            margin: 0 0.5em 0 0;
+        }
+
+        select {
+            margin: 0 0 0 0.5em;
+        }
+
+        .pack-form {
             padding: 1rem 0;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
-        #pack-form fieldset {
+        .pack-form fieldset {
+            padding: 1em;
             flex: 1;
             white-space: nowrap;
+            border: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
         }
 
-        .pack-type-selection:has(#pack-type-batch:not(:checked)) + .batch-selection {
+        .pack-form:has(input[value="batch"]:not(:checked)) .batch-selector {
             display: none;
         }
 
@@ -68,30 +90,18 @@
     <p>Build an Anki study deck from the Recurse Center directory to get familiar with your batchmates. 🐙</p>
     <p>Anki is a flashcard program that uses spaced repetition to improve long-term retention. Read more about Anki and
         download it <a target="_blank" rel="noreferrer" href="https://apps.ankiweb.net/">here</a>.</p>
-    <form id="pack-form" action="{{ url_for('api.generate_pack') }}" method="post">
-        <fieldset class="pack-type-selection">
+    <form class="pack-form" action="{{ url_for('api.generate_pack') }}" method="post">
+        <fieldset class="pack-selector">
             <legend>Select a pack</legend>
-            <div>
-                <input type="radio" id="pack-type-current" name="scope" value="current" checked/>
-                <label for="pack-type-current">At RC now</label>
-            </div>
-            <div>
-                <input type="radio" id="pack-type-overlap" name="scope" value="overlap"/>
-                <label for="pack-type-overlap">At RC with me</label>
-            </div>
-            <div>
-                <input type="radio" id="pack-type-batch" name="scope" value="batch"/>
-                <label for="pack-type-batch">Batch booster pack</label>
-            </div>
+            <label><input type="radio" name="scope" value="current" checked/> At RC now</label>
+            <label><input type="radio" name="scope" value="overlap"/> At RC with me</label>
+            <label><input type="radio" name="scope" value="batch"/> Batch booster pack</label>
         </fieldset>
-        <fieldset class="batch-selection">
+        <fieldset class="batch-selector">
             <legend>Pick a batch</legend>
-            <label for="select-batch">Batch:</label>
-            <select id="select-batch" name="batch_id">
-                {% for batch in batches %}
-                    <option value="{{ batch.id }}">{{ batch.name }}</option>
-                {% endfor %}
-            </select>
+            <label>Batch: <select name="batch_id">{% for batch in batches %}
+                <option value="{{ batch.id }}">{{ batch.name }}</option>{% endfor %}
+            </select></label>
         </fieldset>
         <div class="submit-button-wrapper">
             <button class="submit-button" type="submit">Go!</button>

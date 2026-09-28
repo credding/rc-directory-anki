@@ -11,21 +11,9 @@ from flask import (
 
 from rc_directory_anki.auth import require_token
 from rc_directory_anki.build_pack import build_pack
-from rc_directory_anki.rc_api import (
-    get_batch,
-    get_batches,
-    get_my_profile,
-    get_profiles,
-)
+from rc_directory_anki.rc_api import get_batch, get_my_profile, get_profiles
 
 bp = Blueprint("api", __name__)
-
-
-@bp.route("/batches")
-@require_token
-def batches():
-    token = session["token"]
-    return get_batches(token)
 
 
 @bp.post("/generate-pack")
