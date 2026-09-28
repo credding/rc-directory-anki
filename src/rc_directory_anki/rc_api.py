@@ -7,29 +7,26 @@ from rc_directory_anki.auth import recurse
 MAX_PROFILES = 200
 
 
-def get_batches(token) -> list:
-    resp = recurse.get("batches", token=token)
+def get_batches() -> list:
+    resp = recurse.get("batches")
     resp.raise_for_status()
     return resp.json()
 
 
-def get_batch(token, batch_id: int):
-    resp = recurse.get(f"batches/{batch_id}", token=token)
+def get_batch(batch_id: int):
+    resp = recurse.get(f"batches/{batch_id}")
     resp.raise_for_status()
     return resp.json()
 
 
-def get_profiles(token, query) -> list:
+def get_profiles(query) -> list:
     result = []
 
     while True:
         params = query.copy()
         params["limit"] = 50
         params["offset"] = len(result)
-        resp = recurse.get(
-            f"profiles?{urlencode(params)}",
-            token=token,
-        )
+        resp = recurse.get(f"profiles?{urlencode(params)}")
         resp.raise_for_status()
 
         page = resp.json()
@@ -49,7 +46,7 @@ def get_profiles(token, query) -> list:
     return result
 
 
-def get_my_profile(token):
-    resp = recurse.get("profiles/me", token=token)
+def get_my_profile():
+    resp = recurse.get("profiles/me")
     resp.raise_for_status()
     return resp.json()

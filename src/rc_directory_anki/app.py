@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask, render_template, session
+from flask import Flask, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from rc_directory_anki.api import bp as api_bp
@@ -29,6 +29,5 @@ app.register_blueprint(api_bp, url_prefix="/api")
 @app.route("/")
 @require_token
 def index():
-    token = session["token"]
-    batches = get_batches(token)
+    batches = get_batches()
     return render_template("index.html", batches=batches)

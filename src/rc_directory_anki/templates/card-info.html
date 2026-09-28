@@ -5,12 +5,12 @@
     {% for stint in profile.stints %}
         {% if stint.type == "retreat" %}
             <span class="stint retreat {{ 'half-batch' if stint.for_half_batch else '' }}">
-            {{ stint.batch.alt_name }}
-        </span>
+                {{ stint.batch.alt_name }}
+            </span>
         {% elif stint.type == "employment" %}
             <span class="stint employment">
-            {{ stint.title }}
-        </span>
+                {{ stint.title }}
+            </span>
         {% endif %}
     {% endfor %}
 </div>

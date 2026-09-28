@@ -1,13 +1,7 @@
 import shutil
 import tempfile
 
-from flask import (
-    Blueprint,
-    jsonify,
-    request,
-    send_file,
-    session,
-)
+from flask import Blueprint, jsonify, request, send_file
 
 from rc_directory_anki.auth import require_token
 from rc_directory_anki.build_pack import build_pack
@@ -19,15 +13,13 @@ bp = Blueprint("api", __name__)
 @bp.post("/generate-pack")
 @require_token
 def generate_pack():
-    token = session["token"]
-
     match request.form.get("scope"):
         case "current":
             pack_name = "At RC now"
             profiles_query = {"scope": "current"}
 
         case "overlap":
-            profile = get_my_profile(token)
+            profile = get_my_profile()
             pack_name = f"At RC with {profile['name']}"
             profiles_query = {"scope": "overlap"}
 
@@ -40,7 +32,7 @@ def generate_pack():
             except ValueError:
                 return jsonify(error="batch_id must be an integer"), 400
 
-            batch = get_batch(token, batch_id)
+            batch = get_batch(batch_id)
             pack_name = f"RC {batch['name']}"
             profiles_query = {"batch_id": batch_id}
 
@@ -49,7 +41,7 @@ def generate_pack():
                 error="scope must be one of 'current', 'overlap', or 'batch'"
             ), 400
 
-    profiles = get_profiles(token, profiles_query)
+    profiles = get_profiles(profiles_query)
 
     tmpdir = tempfile.mkdtemp()
     try:
